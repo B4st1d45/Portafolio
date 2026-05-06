@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T. Bastidas | Analista Programadora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        header p {
+            font-size: 1.2em;
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .proyectos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .card {
+            border: none;
+            padding: 25px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            margin: 0 0 10px;
+            color: #667eea;
+        }
+        .card h3 a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .card h3 a:hover {
+            text-decoration: underline;
+        }
+        .card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        #loading {
+            text-align: center;
+            font-style: italic;
+            color: #999;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            .proyectos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>T. Bastidas</h1>
+        <p>Analista Programadora | Inacap</p>
+    </header>
+
+    <section id="contenedor-proyectos" class="proyectos">
+        <h2>Mis Proyectos de GitHub</h2>
+        <div id="loading">Cargando proyectos...</div>
+        <!-- Aquí aparecerán tus proyectos automáticamente -->
+    </section>
+
+    <script>
+        const username = 'B4st1d45';
+        const apiUrl = `https://api.github.com/users/${username}/repos`;
+
+        fetch(apiUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al obtener los repositorios');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('contenedor-proyectos');
+                const loading = document.getElementById('loading');
+                loading.style.display = 'none';
+
+                data.forEach(repo => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3><a href="${repo.html_url}" target="_blank">${repo.name}</a></h3>
+                        <p>${repo.description || 'Sin descripción'}</p>
+                        <p><strong>Lenguaje:</strong> ${repo.language || 'No especificado'}</p>
+                        <p><strong>Estrellas:</strong> ${repo.stargazers_count}</p>
+                    `;
+                    container.appendChild(card);
+                });
+            })
+            .catch(error => {
+                const container = document.getElementById('contenedor-proyectos');
+                const loading = document.getElementById('loading');
+                loading.innerHTML = 'Error al cargar los proyectos: ' + error.message;
+            });
+    </script>
+
+</body>
+</html>
